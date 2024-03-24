@@ -1,9 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
+import { Public_Sans } from "next/font/google";
 import NextAuthSessionProvider from "./provider/sessionProvider";
+import MuiThemeProvider from "./provider/themeProvider";
 
-const inter = Lato({ weight: ["900", "400"], subsets: ["latin"] });
+const inter = Public_Sans({ weight: ["900", "400"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+        <MuiThemeProvider>
+          <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+        </MuiThemeProvider>
       </body>
     </html>
   );
