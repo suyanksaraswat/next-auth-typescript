@@ -7,12 +7,14 @@ import Typography from "@mui/material/Typography";
 import { drawerWidth } from "../config";
 import Profile from "./Profile";
 import { Box, styled, useTheme } from "@mui/material";
+import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
 
 interface Props {
+  session: { user: CustomUser };
   handleDrawerToggle: () => void;
 }
 
-export default function Header({ handleDrawerToggle }: Props) {
+export default function Header({ session, handleDrawerToggle }: Props) {
   const theme = useTheme();
 
   const appBar = {
@@ -45,7 +47,7 @@ export default function Header({ handleDrawerToggle }: Props) {
 
         <Box sx={{ width: "100%", ml: 1 }} />
 
-        <Profile />
+        <Profile session={session} />
       </Toolbar>
     </AppBar>
   );

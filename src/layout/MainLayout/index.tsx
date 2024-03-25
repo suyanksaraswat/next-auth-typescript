@@ -1,15 +1,19 @@
+"use client";
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { drawerWidth } from "./config";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
 
 interface Props {
+  session: { user: CustomUser };
   children: React.ReactNode;
 }
 
-export default function MainLayout({ children }: Props) {
+export default async function MainLayout({ session, children }: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -30,9 +34,10 @@ export default function MainLayout({ children }: Props) {
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
-      <Header handleDrawerToggle={handleDrawerToggle} />
+      <Header handleDrawerToggle={handleDrawerToggle} session={session} />
 
       <Sidebar
+        session={session}
         mobileOpen={mobileOpen}
         handleDrawerClose={handleDrawerClose}
         handleDrawerTransitionEnd={handleDrawerTransitionEnd}

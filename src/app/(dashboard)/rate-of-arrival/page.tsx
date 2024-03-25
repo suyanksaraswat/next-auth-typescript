@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
 
-export default function Dashboard() {
+export default function RateOfArrival() {
   return (
     <div>
-      <Box>Dashboard</Box>
+      <Box>Rate of Arrival</Box>
     </div>
   );
 }

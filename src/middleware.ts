@@ -1,5 +1,6 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+import { CustomUser } from "./app/api/auth/[...nextauth]/options";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -15,6 +16,29 @@ export async function middleware(request: NextRequest) {
 
   if (token == null && userProtectedRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  const user: CustomUser | null = token?.user as CustomUser;
+
+  if (
+    user?.role === "role1" &&
+    ["/analyze-criteria", "/rate-of-arrival"].includes(pathname)
+  ) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  if (
+    user?.role === "role2" &&
+    ["/cohort", "/rate-of-arrival"].includes(pathname)
+  ) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  if (
+    user?.role === "role3" &&
+    ["cohort", "/analyze-criteria"].includes(pathname)
+  ) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 }
 

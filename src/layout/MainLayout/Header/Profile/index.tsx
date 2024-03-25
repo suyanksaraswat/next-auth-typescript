@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState } from "react";
 import {
   Avatar,
@@ -17,13 +19,18 @@ import {
 
 import ProfileTab from "./ProfileTab";
 
-import { LogoutOutlined } from "@ant-design/icons";
+import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
+import { signOut } from "next-auth/react";
 
-const Profile = () => {
+const Profile = ({ session }: { session: { user: CustomUser } }) => {
   const theme = useTheme();
 
   const handleLogout = async () => {
     // logout
+    signOut({
+      callbackUrl: "/login",
+      redirect: true,
+    });
   };
 
   const anchorRef: any = useRef(null);
@@ -58,7 +65,7 @@ const Profile = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" sx={{ width: 32, height: 32 }} />
-          <Typography variant="subtitle1">John Doe</Typography>
+          <Typography variant="subtitle1">{session?.user?.name}</Typography>
         </Stack>
       </ButtonBase>
       <Popper
@@ -106,9 +113,11 @@ const Profile = () => {
                           sx={{ width: 32, height: 32 }}
                         />
                         <Stack>
-                          <Typography variant="h6">John Doe</Typography>
+                          <Typography variant="h6">
+                            {session?.user?.name}
+                          </Typography>
                           <Typography variant="body2" color="textSecondary">
-                            UI/UX Designer
+                            {session?.user?.role}
                           </Typography>
                         </Stack>
                       </Stack>

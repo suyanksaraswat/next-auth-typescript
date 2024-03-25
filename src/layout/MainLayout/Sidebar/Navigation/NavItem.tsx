@@ -8,14 +8,19 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
 
 interface Props {
+  session: { user: CustomUser };
   item: {
     id: string;
     title: string;
     icon?: any;
     url?: string;
     type: string;
+    allowed?: string[];
     children?: {
       id: string;
       title: string;
@@ -23,13 +28,16 @@ interface Props {
       url?: string;
       icon?: any;
       breadcrumbs: boolean;
+      allowed?: string[];
     }[];
   };
   level: number;
 }
 
-const NavItem = ({ item, level }: Props) => {
+const NavItem = ({ item, level, session }: Props) => {
   const theme = useTheme();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const Icon = item.icon;
   const itemIcon = item.icon ? <Icon style={{ fontSize: "1rem" }} /> : false;
@@ -37,11 +45,15 @@ const NavItem = ({ item, level }: Props) => {
   const textColor = "text.primary";
   const iconSelectedColor = "primary.main";
 
-  const isSelected = true;
+  const isSelected = pathname === item?.url;
 
-  return (
+  return !item?.allowed ||
+    (item?.allowed &&
+      session?.user?.role &&
+      item?.allowed?.includes(session?.user?.role)) ? (
     <ListItemButton
       selected={isSelected}
+      onClick={() => item.url && router.push(item.url)}
       sx={{
         zIndex: 1201,
         pl: `${level * 28}px`,
@@ -82,7 +94,7 @@ const NavItem = ({ item, level }: Props) => {
         }
       />
     </ListItemButton>
-  );
+  ) : null;
 };
 
 NavItem.propTypes = {

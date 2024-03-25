@@ -7,8 +7,10 @@ import { Box, List, Typography } from "@mui/material";
 import NavItem from "./NavItem";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { AntdIconProps } from "@ant-design/icons/lib/components/AntdIcon";
+import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
 
 interface Props {
+  session: { user: CustomUser };
   item: {
     id: string;
     title: string;
@@ -17,6 +19,7 @@ interface Props {
     >;
     url?: string;
     type: string;
+    allowed?: string[];
     children: {
       id: string;
       title: string;
@@ -26,11 +29,12 @@ interface Props {
         Omit<AntdIconProps, "ref"> & RefAttributes<HTMLSpanElement>
       >;
       breadcrumbs: boolean;
+      allowed?: string[];
     }[];
   };
 }
 
-const NavGroup = ({ item }: Props) => {
+const NavGroup = ({ item, session }: Props) => {
   const drawerOpen = true;
 
   const navCollapse = item.children?.map((menuItem) => {
@@ -47,7 +51,14 @@ const NavGroup = ({ item }: Props) => {
           </Typography>
         );
       case "item":
-        return <NavItem key={menuItem.id} item={menuItem} level={1} />;
+        return (
+          <NavItem
+            key={menuItem.id}
+            item={menuItem}
+            level={1}
+            session={session}
+          />
+        );
       default:
         return (
           <Typography

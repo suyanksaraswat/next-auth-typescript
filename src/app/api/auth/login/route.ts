@@ -13,13 +13,12 @@ connect();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    console.log("## body-", body);
+
     vine.errorReporter = () => new ErrorReporter();
     const validator = vine.compile(loginSchema);
     const output = await validator.validate(body);
     const user = await User.findOne({ email: output.email });
 
-    console.log("## user-", user);
     if (user) {
       const checkPassword = bcrypt.compareSync(output.password!, user.password);
       console.info("the checkpassword is", checkPassword);

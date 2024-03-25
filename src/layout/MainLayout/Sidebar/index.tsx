@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -5,14 +7,17 @@ import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
 import { drawerWidth } from "../config";
 import Navigation from "./Navigation";
+import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
 
 interface Props {
+  session: { user: CustomUser };
   mobileOpen: boolean;
   handleDrawerTransitionEnd: () => void;
   handleDrawerClose: () => void;
 }
 
 export default function Sidebar({
+  session,
   mobileOpen,
   handleDrawerTransitionEnd,
   handleDrawerClose,
@@ -22,12 +27,12 @@ export default function Sidebar({
       <Toolbar />
       <Divider />
 
-      <Navigation />
+      <Navigation session={session} />
     </div>
   );
 
   const container =
-    window !== undefined ? () => window?.document.body : undefined;
+    typeof window !== "undefined" ? () => window?.document.body : undefined;
 
   return (
     <Box
